@@ -18,6 +18,11 @@ Main:
   lui $t0, IO_BASE_ADDR      ; t0 = I/O Port Base Address (mapped at 0x1F80****)
 
   ; ---------------------------------------------------------------------------
+  ; Initialize stack pointer to 0x00103CF0
+  ; ---------------------------------------------------------------------------
+  la $sp, 0x00103CF0
+
+  ; ---------------------------------------------------------------------------
   ; Send commands to GP1 (mapped at 0x1F801814)
   ; These GP1 is for display control and environment setup
   ; (Command = 8-Bit MSB, Parameter = 24-Bit LSB)
@@ -59,7 +64,7 @@ Main:
   ; ---------------------------------------------------------------------------
   ; Clear the screen (draw a rectangle on VRAM).
   ; ---------------------------------------------------------------------------
-  li $t1, 0x02808080         ; 02 = Fill Rectangle in VRAM (Parameter Color: 0xBBGGRR)
+  li $t1, 0x02422E1B         ; 02 = Fill Rectancle in VRAM (Parameter Color: 0xBBGGRR)
   sw $t1, GP0($t0)           ; Write GP0 Command
   
   li $t1, 0x00000000         ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
@@ -69,98 +74,148 @@ Main:
   sw $t1, GP0($t0)           ; Write to GP0
   
   ; ---------------------------------------------------------------------------
-  ; TODO: Draw a flat-shaded triangle
+  ; Draw a flat-shaded triangle
   ; ---------------------------------------------------------------------------
-  li $t1, 0x20FF0000        ; 02 = Fill Rectangle in VRAM (Parameter Color: 0xBBGGRR)
-  sw $t1, GP0($t0)           ; Write GP0 Command
-  
-  li $t1, 0x00000000        ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
-  sw $t1, GP0($t0)           ; Write to GP0
-  
-  li $t1, 0x00320032         ; Fill Area, 0xHHHHWWWW (Height=239, Width=319)
-  sw $t1, GP0($t0)           ; Write to GP0
-
-  li $t1, 0x00960010         ; Fill Area, 0xHHHHWWWW (Height=239, Width=319)
-  sw $t1, GP0($t0)           ; Write to GP0
-
-
-
-  ; ---------------------------------------------------------------------------
-  ; TODO: Draw a flat-shaded quad
-  ; ---------------------------------------------------------------------------
-  li $t1, 0x2800FFFF        ; 02 = Fill Rectangle in VRAM (Parameter Color: 0xBBGGRR)
-  sw $t1, GP0($t0)           ; Write GP0 Command
-  
-  li $t1, 0x00000064         ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
-  sw $t1, GP0($t0)           ; Write to GP0
-  
-  li $t1, 0x00000082         ; Fill Area, 0xHHHHWWWW (Height=239, Width=319)
-  sw $t1, GP0($t0)           ; Write to GP0
-
-  li $t1, 0x00580064         ; Fill Area, 0xHHHHWWWW (Height=239, Width=319)
-  sw $t1, GP0($t0)           ; Write to GP0
-
-  li $t1, 0x00580082         ; Fill Area, 0xHHHHWWWW (Height=239, Width=319)
-  sw $t1, GP0($t0)           ; Write to GP0
-
-  ; ---------------------------------------------------------------------------
-  ; TODO: Draw a flat-shaded quad
-  ; ---------------------------------------------------------------------------
-  li $t1, 0x2800FFFF        ; 02 = Fill Rectangle in VRAM (Parameter Color: 0xBBGGRR)
-  sw $t1, GP0($t0)           ; Write GP0 Command
-  
-  li $t1, 0x00A80034         ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
-  sw $t1, GP0($t0)           ; Write to GP0
-  
-  li $t1, 0x00C800B2         ; Fill Area, 0xHHHHWWWW (Height=239, Width=319)
-  sw $t1, GP0($t0)           ; Write to GP0
-
-  li $t1, 0x00A80034         ; Fill Area, 0xHHHHWWWW (Height=239, Width=319)
-  sw $t1, GP0($t0)           ; Write to GP0
-
-  li $t1, 0x00C800B2         ; Fill Area, 0xHHHHWWWW (Height=239, Width=319)
-  sw $t1, GP0($t0)           ; Write to GP0
-
-
-
-  ; ---------------------------------------------------------------------------
-  ; TODO: Draw a gourad-shaded traingle
-  ; ---------------------------------------------------------------------------
-  li $t1, 0x30000000        ; 02 = Fill Rectangle in VRAM (Parameter Color: 0xBBGGRR)
+  li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
+  li $t1, 0x00320032         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=50,y=50)
+  sw $t1, GP0($t0)           ; Write GP0 Command
 
-  
-  li $t1, 0x000000E6         ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
+  li $t1, 0x001E0064         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=100,y=30)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x0064006E         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  ; ---------------------------------------------------------------------------
+  ; Draw a flat-shaded quad
+  ; ---------------------------------------------------------------------------
+  li $t1, 0x28FF00FF         ; 28 = Flat-shaded quad (Parameter Color: 0xBBGGRR)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x00960096         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=150,y=150)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x006400BE         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=190,y=100)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x00DC00A0         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=160,y=220)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x00C80104         ; Vertex 4: (Parameter 0xYyyyXxxx) (x=260,y=200)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  ; ---------------------------------------------------------------------------
+  ; Draw a Gouraud-shaded triangle
+  ; ---------------------------------------------------------------------------
+  li $t1, 0x30FF31FF         ; 30 = Gouraud-shaded triangle (Parameter Color 1: 0xBBGGRR)
   sw $t1, GP0($t0)           ; Write to GP0
 
-  li $t1, 0x00FFCC33         ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
+  li $t1, 0x00B40014         ; Vertex 1: 0xYyyyXxxx (x=20,y=180)
   sw $t1, GP0($t0)           ; Write to GP0
 
-
-  
-  li $t1, 0x003200B4         ; Fill Area, 0xHHHHWWWW (Height=239, Width=319)
+  li $t1, 0x00A88332         ; Color 2 :0xBBGGRR
   sw $t1, GP0($t0)           ; Write to GP0
 
-  li $t1, 0x0033CCFF         ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
+  li $t1, 0x006400A0         ; Vertex 2: 0xYyyyXxxx (x=160,y=100)
   sw $t1, GP0($t0)           ; Write to GP0
 
-
-
-
-  li $t1, 0x009600D6         ; Fill Area, 0xHHHHWWWW (Height=239, Width=319)
+  li $t1, 0x0000FF00         ; Color 3 :0xBBGGRR
   sw $t1, GP0($t0)           ; Write to GP0
 
-  li $t1, 0x00CCFF33         ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
+  li $t1, 0x00E6004B         ; Vertex 3: 0xYyyyXxxx (x=75,y=230)
   sw $t1, GP0($t0)           ; Write to GP0
 
+  ; ---------------------------------------------------------------------------
+  ; Set $a0 as the global parameter with the IO_BASE_ADDR to be used by subs
+  ; ---------------------------------------------------------------------------
+  lui $a0, IO_BASE_ADDR      ; Global Param: I/O Port Base Address (0x1F80****)
 
-
-
-
+  ; ---------------------------------------------------------------------------
+  ; Draw a flat-shaded triangle using a subroutine
+  ; ---------------------------------------------------------------------------
+  addiu $sp, -(4 * 7)        ; Subtract stack pointer to 'push' 7 words/params
+  li $t0, 0xFF4472           ; Param: Color (0xBBGGRR)
+  sw $t0, 0($sp)             ; Push argument to the $sp+0
+  li $t0, 200                ; Param: x1
+  sw $t0, 4($sp)             ; Push argument to the $sp+4
+  li $t0, 40                 ; Param: y1
+  sw $t0, 8($sp)             ; Push argument to the $sp+8
+  li $t0, 288                ; Param: x2
+  sw $t0, 12($sp)            ; Push argument to the $sp+12
+  li $t0, 56                 ; Param: y2
+  sw $t0, 16($sp)            ; Push argument to the $sp+16
+  li $t0, 224                ; Param: x3
+  sw $t0, 20($sp)            ; Push argument to the $sp+20
+  li $t0, 200                ; Param: y3
+  sw $t0, 24($sp)            ; Push argument to the $sp+24
+  jal DrawFlatTriangle       ; Invoke Draw Triangle subroutine with params
+  nop
 
 LoopForever:
   j LoopForever              ; Continuous loop
+  nop
+
+; -----------------------------------------------------------------------------
+; Subroutine to draw a flat-shaded triangle on the screen (3 vertices)
+; Args:
+; $a0    = IO_BASE_ADDR (IO ports are at address 0x1F80****)
+; $sp+0  = Color (for example: 0xBBGGRR)
+; $sp+4  = x1
+; $sp+8  = y1
+; $sp+12 = x2
+; $sp+16 = y2
+; $sp+20 = x3
+; $sp+24 = y3
+; -----------------------------------------------------------------------------
+DrawFlatTriangle:
+  ;;;;;;;;;;;;;;;;
+  ;;;; TODO:
+  ;;;;;;;;;;;;;;;;
+
+  ; Initialize flat shaded Triangle with color
+  lw $t1, 0($sp)
+  nop
+  lui $t2, 0x2000
+  sll $t1, 8
+  srl $t1, 8
+  or $t1, $t1, $t2
+  sw $t1, GP0($a0)           ; Write GP0 Command
+
+
+  ; Specify Axeses (x,y)
+  lw $t1, 4($sp)	     ; load x
+  nop
+  lw $t2, 8($sp)	     ; load y
+  nop
+  sll $t2, $t2, 16	     ; shift y by 2 bytes
+  andi $t1, 0xFFFF
+  or $t1, $t1, $t2	     ; join Y & X values together "0xYyyyXxxx"
+  sw $t1, GP0($a0)           ; Write GP0 Command
+  
+  lw $t1, 12($sp)	     ; load x
+  nop
+  lw $t2, 16($sp)	     ; load y
+  nop
+  sll $t2, $t2, 16	     ; shift y by 2 bytes
+  andi $t1, 0xFFFF
+  or $t1, $t1, $t2	     ; join Y & X values together "0xYyyyXxxx"
+  sw $t1, GP0($a0)           ; Write GP0 Command
+
+  lw $t1, 20($sp)	     ; load x
+  nop
+  lw $t2, 24($sp)	     ; load y
+  nop
+  sll $t2, $t2, 16	     ; shift y by 2 bytes
+  andi $t1, 0xFFFF
+  or $t1, $t1, $t2	     ; join Y & X values together "0xYyyyXxxx"
+  sw $t1, GP0($a0)           ; Write GP0 Command
+
+  addiu $sp, 28
+
+  
+  jr $ra                     ; Return address is stored in register $ra
   nop
 
 .close
